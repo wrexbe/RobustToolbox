@@ -19,11 +19,11 @@ namespace Robust.Client.Placement.Modes
         {
             MouseCoords = ScreenToCursorGrid(mouseScreen);
 
-            var gridId = MouseCoords.GetGridId(pManager.EntityManager);
+            var gridId = MouseCoords.GetGridId(PlacementManager.EntityManager);
             SnapSize = 1f;
             if (gridId.IsValid())
             {
-                Grid = pManager.MapManager.GetGrid(gridId);
+                Grid = PlacementManager.MapManager.GetGrid(gridId);
                 SnapSize = Grid.TileSize; //Find snap size for the grid.
             }
             else
@@ -40,7 +40,7 @@ namespace Robust.Client.Placement.Modes
             //Convert back to original world and screen coordinates after applying offset
             MouseCoords =
                 new EntityCoordinates(
-                    MouseCoords.EntityId, mouselocal + new Vector2(pManager.PlacementOffset.X, pManager.PlacementOffset.Y));
+                    MouseCoords.EntityId, mouselocal + new Vector2(PlacementManager.PlacementOffset.X, PlacementManager.PlacementOffset.Y));
         }
     }
 }

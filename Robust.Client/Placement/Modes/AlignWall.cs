@@ -14,17 +14,17 @@ namespace Robust.Client.Placement.Modes
             MouseCoords = ScreenToCursorGrid(mouseScreen);
             CurrentTile = GetTileRef(MouseCoords);
 
-            if (pManager.CurrentPermission!.IsTile)
+            if (PlacementManager.CurrentPermission!.IsTile)
             {
                 return;
             }
 
             var nodes = new List<Vector2>();
 
-            if (pManager.CurrentPrototype!.MountingPoints != null)
+            if (PlacementManager.CurrentPrototype!.MountingPoints != null)
             {
                 nodes.AddRange(
-                    pManager.CurrentPrototype.MountingPoints.Select(
+                    PlacementManager.CurrentPrototype.MountingPoints.Select(
                         current => new Vector2(MouseCoords.X, CurrentTile.Y + current)));
             }
             else
@@ -39,12 +39,12 @@ namespace Robust.Client.Placement.Modes
                                    select node).First();
 
             MouseCoords = new EntityCoordinates(MouseCoords.EntityId,
-                closestNode + (pManager.PlacementOffset.X, pManager.PlacementOffset.Y));
+                closestNode + (PlacementManager.PlacementOffset.X, PlacementManager.PlacementOffset.Y));
         }
 
         public override bool IsValidPosition(EntityCoordinates position)
         {
-            return !pManager.CurrentPermission!.IsTile && RangeCheck(position);
+            return !PlacementManager.CurrentPermission!.IsTile && RangeCheck(position);
         }
     }
 }

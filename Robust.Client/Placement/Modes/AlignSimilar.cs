@@ -18,7 +18,7 @@ namespace Robust.Client.Placement.Modes
             MouseCoords = ScreenToCursorGrid(mouseScreen);
             CurrentTile = GetTileRef(MouseCoords);
 
-            if (pManager.CurrentPermission!.IsTile)
+            if (PlacementManager.CurrentPermission!.IsTile)
             {
                 return;
             }
@@ -28,11 +28,11 @@ namespace Robust.Client.Placement.Modes
                 return;
             }
 
-            var mapId = MouseCoords.GetMapId(pManager.EntityManager);
+            var mapId = MouseCoords.GetMapId(PlacementManager.EntityManager);
 
             var snapToEntities = IoCManager.Resolve<IEntityLookup>().GetEntitiesInRange(MouseCoords, SnapToRange)
-                .Where(entity => entity.Prototype == pManager.CurrentPrototype && entity.Transform.MapID == mapId)
-                .OrderBy(entity => (entity.Transform.WorldPosition - MouseCoords.ToMapPos(pManager.EntityManager)).LengthSquared)
+                .Where(entity => entity.Prototype == PlacementManager.CurrentPrototype && entity.Transform.MapID == mapId)
+                .OrderBy(entity => (entity.Transform.WorldPosition - MouseCoords.ToMapPos(PlacementManager.EntityManager)).LengthSquared)
                 .ToList();
 
             if (snapToEntities.Count == 0)
@@ -70,7 +70,7 @@ namespace Robust.Client.Placement.Modes
 
         public override bool IsValidPosition(EntityCoordinates position)
         {
-            if (pManager.CurrentPermission!.IsTile)
+            if (PlacementManager.CurrentPermission!.IsTile)
             {
                 return false;
             }

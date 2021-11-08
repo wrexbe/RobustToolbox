@@ -21,11 +21,11 @@ namespace Robust.Client.Placement.Modes
         {
             if (Grid != null)
             {
-                var viewportSize = (Vector2)pManager._clyde.ScreenSize;
+                var viewportSize = (Vector2)PlacementManager._clyde.ScreenSize;
 
-                var gridPosition = Grid.MapToGrid(pManager.eyeManager.ScreenToMap(Vector2.Zero));
+                var gridPosition = Grid.MapToGrid(PlacementManager.eyeManager.ScreenToMap(Vector2.Zero));
 
-                var gridstart = pManager.eyeManager.CoordinatesToScreen(
+                var gridstart = PlacementManager.eyeManager.CoordinatesToScreen(
                     gridPosition.WithPosition(new Vector2(MathF.Floor(gridPosition.X), MathF.Floor(gridPosition.Y))));
 
                 for (var a = gridstart.X; a < viewportSize.X; a += SnapSize * EyeManager.PixelsPerMeter) //Iterate through screen creating gridlines
@@ -50,11 +50,11 @@ namespace Robust.Client.Placement.Modes
         {
             MouseCoords = ScreenToCursorGrid(mouseScreen);
 
-            var gridId = MouseCoords.GetGridId(pManager.EntityManager);
+            var gridId = MouseCoords.GetGridId(PlacementManager.EntityManager);
             SnapSize = 1f;
             if (gridId.IsValid())
             {
-                Grid = pManager.MapManager.GetGrid(gridId);
+                Grid = PlacementManager.MapManager.GetGrid(gridId);
                 SnapSize = Grid.TileSize; //Find snap size for the grid.
             }
             else
@@ -69,7 +69,7 @@ namespace Robust.Client.Placement.Modes
                 (float)(MathF.Round((MouseCoords.Position.Y / SnapSize - 0.5f), MidpointRounding.AwayFromZero) + 0.5) * SnapSize);
 
             //Adjust mouseCoords to new calculated position
-            MouseCoords = new EntityCoordinates(MouseCoords.EntityId, mouseLocal + new Vector2(pManager.PlacementOffset.X, pManager.PlacementOffset.Y));
+            MouseCoords = new EntityCoordinates(MouseCoords.EntityId, mouseLocal + new Vector2(PlacementManager.PlacementOffset.X, PlacementManager.PlacementOffset.Y));
         }
 
         public override bool IsValidPosition(EntityCoordinates position)

@@ -17,18 +17,18 @@ namespace Robust.Client.Placement.Modes
             MouseCoords = ScreenToCursorGrid(mouseScreen);
 
             var tileSize = 1f;
-            var gridId = MouseCoords.GetGridId(pManager.EntityManager);
+            var gridId = MouseCoords.GetGridId(PlacementManager.EntityManager);
 
             if (gridId.IsValid())
             {
-                var mapGrid = pManager.MapManager.GetGrid(MouseCoords.GetGridId(pManager.EntityManager));
+                var mapGrid = PlacementManager.MapManager.GetGrid(MouseCoords.GetGridId(PlacementManager.EntityManager));
                 CurrentTile = mapGrid.GetTileRef(MouseCoords);
                 tileSize = mapGrid.TileSize; //convert from ushort to float
             }
 
             GridDistancing = tileSize;
 
-            if (pManager.CurrentPermission!.IsTile)
+            if (PlacementManager.CurrentPermission!.IsTile)
             {
                 MouseCoords = new EntityCoordinates(MouseCoords.EntityId,
                     (CurrentTile.X + tileSize / 2, CurrentTile.Y + tileSize / 2));
@@ -36,8 +36,8 @@ namespace Robust.Client.Placement.Modes
             else
             {
                 MouseCoords = new EntityCoordinates(MouseCoords.EntityId,
-                    (CurrentTile.X + tileSize / 2 + pManager.PlacementOffset.X,
-                        CurrentTile.Y + tileSize / 2 + pManager.PlacementOffset.Y));
+                    (CurrentTile.X + tileSize / 2 + PlacementManager.PlacementOffset.X,
+                        CurrentTile.Y + tileSize / 2 + PlacementManager.PlacementOffset.Y));
             }
         }
 
@@ -48,7 +48,7 @@ namespace Robust.Client.Placement.Modes
                 return false;
             }
 
-            var map = MouseCoords.GetMapId(pManager.EntityManager);
+            var map = MouseCoords.GetMapId(PlacementManager.EntityManager);
             var bottomLeft = new Vector2(CurrentTile.X, CurrentTile.Y);
             var topRight = new Vector2(CurrentTile.X + 0.99f, CurrentTile.Y + 0.99f);
             var box = new Box2(bottomLeft, topRight);

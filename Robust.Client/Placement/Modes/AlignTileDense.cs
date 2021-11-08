@@ -14,18 +14,18 @@ namespace Robust.Client.Placement.Modes
             MouseCoords = ScreenToCursorGrid(mouseScreen);
 
             var tileSize = 1f;
-            var gridId = MouseCoords.GetGridId(pManager.EntityManager);
+            var gridId = MouseCoords.GetGridId(PlacementManager.EntityManager);
 
             if (gridId.IsValid())
             {
-                var mapGrid = pManager.MapManager.GetGrid(MouseCoords.GetGridId(pManager.EntityManager));
+                var mapGrid = PlacementManager.MapManager.GetGrid(MouseCoords.GetGridId(PlacementManager.EntityManager));
                 tileSize = mapGrid.TileSize; //convert from ushort to float
             }
 
             CurrentTile = GetTileRef(MouseCoords);
             GridDistancing = tileSize;
 
-            if (pManager.CurrentPermission!.IsTile)
+            if (PlacementManager.CurrentPermission!.IsTile)
             {
                 MouseCoords = new EntityCoordinates(MouseCoords.EntityId,
                     (CurrentTile.X + tileSize / 2, CurrentTile.Y + tileSize / 2));
@@ -33,8 +33,8 @@ namespace Robust.Client.Placement.Modes
             else
             {
                 MouseCoords = new EntityCoordinates(MouseCoords.EntityId,
-                    (CurrentTile.X + tileSize / 2 + pManager.PlacementOffset.X,
-                        CurrentTile.Y + tileSize / 2 + pManager.PlacementOffset.Y));
+                    (CurrentTile.X + tileSize / 2 + PlacementManager.PlacementOffset.X,
+                        CurrentTile.Y + tileSize / 2 + PlacementManager.PlacementOffset.Y));
             }
         }
 
@@ -45,7 +45,7 @@ namespace Robust.Client.Placement.Modes
                 return false;
             }
 
-            return pManager.CurrentPermission!.IsTile || IsColliding(position);
+            return PlacementManager.CurrentPermission!.IsTile || IsColliding(position);
         }
     }
 }

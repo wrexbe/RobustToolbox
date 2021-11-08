@@ -18,7 +18,7 @@ namespace Robust.Client.Placement.Modes
             MouseCoords = ScreenToCursorGrid(mouseScreen);
             CurrentTile = GetTileRef(MouseCoords);
 
-            if (pManager.CurrentPermission!.IsTile)
+            if (PlacementManager.CurrentPermission!.IsTile)
             {
                 return;
             }
@@ -35,7 +35,7 @@ namespace Robust.Client.Placement.Modes
 
             var closestNode = offsets
                 .Select(o => tileCoordinates.Offset(o))
-                .OrderBy(node => node.TryDistance(pManager.EntityManager, MouseCoords, out var distance) ? distance : (float?) null)
+                .OrderBy(node => node.TryDistance(PlacementManager.EntityManager, MouseCoords, out var distance) ? distance : (float?) null)
                 .First();
 
             MouseCoords = closestNode;
@@ -43,7 +43,7 @@ namespace Robust.Client.Placement.Modes
 
         public override bool IsValidPosition(EntityCoordinates position)
         {
-            if (pManager.CurrentPermission!.IsTile)
+            if (PlacementManager.CurrentPermission!.IsTile)
             {
                 return false;
             }
