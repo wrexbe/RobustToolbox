@@ -8,18 +8,18 @@ namespace Robust.Client.Placement
     {
         internal class PlacementOverlay : Overlay
         {
-            private readonly PlacementManager _manager;
+            private readonly PlacementSystem _system;
             public override OverlaySpace Space => OverlaySpace.WorldSpace;
 
-            public PlacementOverlay(PlacementManager manager)
+            public PlacementOverlay(PlacementSystem system)
             {
-                _manager = manager;
+                _system = system;
                 ZIndex = 100;
             }
 
             protected internal override void Draw(in OverlayDrawArgs args)
             {
-                _manager.Render(args.WorldHandle);
+                _system.RenderOverlay(args.WorldHandle);
             }
         }
     }
