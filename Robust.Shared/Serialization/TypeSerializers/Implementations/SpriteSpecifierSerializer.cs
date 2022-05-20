@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
 using Robust.Shared.Serialization.Manager;
@@ -35,20 +36,22 @@ namespace Robust.Shared.Serialization.TypeSerializers.Implementations
             IDependencyCollection dependencies,
             bool skipHook, ISerializationContext? context, SpriteSpecifier? value)
         {
-            try
+            var entityReader = (ITypeReader<EntityPrototype, ValueDataNode>) this;
+            var textureReader = (ITypeReader<Texture, ValueDataNode>) this;
+            switch (value)
             {
-                return ((ITypeReader<EntityPrototype, ValueDataNode>)this).Read(serializationManager, node, dependencies, skipHook, context, (EntityPrototype?) value);
+                case EntityPrototype entityProtoValue:
+                    return entityReader.Read(serializationManager, node, dependencies, skipHook, context, entityProtoValue);
+                case Texture textureProtoValue:
+                    return textureReader.Read(serializationManager, node, dependencies, skipHook, context, textureProtoValue);
+                default:
+                    if (entityReader.TryRead(serializationManager, node, dependencies, skipHook, out var entityProto, context))
+                        return entityProto;
+                    if (textureReader.TryRead(serializationManager, node, dependencies, skipHook, out var texture, context))
+                        return texture;
+                    throw new InvalidMappingException(
+                        "SpriteSpecifier was neither a Texture nor an EntityPrototype but got provided a ValueDataNode");
             }
-            catch { /* ignored */ }
-
-            try
-            {
-                return ((ITypeReader<Texture, ValueDataNode>) this).Read(serializationManager, node, dependencies, skipHook, context, (Texture?)value);
-            }
-            catch { /* ignored */ }
-
-            throw new InvalidMappingException(
-                "SpriteSpecifier was neither a Texture nor an EntityPrototype but got provided a ValueDataNode");
         }
 
         EntityPrototype ITypeReader<EntityPrototype, ValueDataNode>.Read(ISerializationManager serializationManager,
@@ -60,6 +63,21 @@ namespace Robust.Shared.Serialization.TypeSerializers.Implementations
                 throw new InvalidMappingException("Invalid Entity Prototype");
 
             return new EntityPrototype(node.Value);
+        }
+
+        bool ITypeReader<EntityPrototype, ValueDataNode>.TryRead(ISerializationManager serializationManager,
+            ValueDataNode node,
+            IDependencyCollection dependencies,
+            bool skipHook, [NotNullWhen(true)] out EntityPrototype? entityPrototype,
+            ISerializationContext? context, EntityPrototype? value)
+        {
+            if (!IoCManager.Resolve<Prototypes.IPrototypeManager>().HasIndex<Prototypes.EntityPrototype>(node.Value))
+            {
+                entityPrototype = value;
+                return false;
+            }
+            entityPrototype = new EntityPrototype(node.Value);
+            return true;
         }
 
         Rsi ITypeReader<Rsi, MappingDataNode>.Read(ISerializationManager serializationManager,
