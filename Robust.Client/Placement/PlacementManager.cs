@@ -189,7 +189,6 @@ namespace Robust.Client.Placement
 
             _drawOverlay = new PlacementOverlay(this);
             _overlayManager.AddOverlay(_drawOverlay);
-
             // a bit ugly, oh well
             _baseClient.PlayerJoinedServer += (sender, args) => SetupInput();
             _baseClient.PlayerLeaveServer += (sender, args) => TearDownInput();
